@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import PreviewPage from './pages/PreviewPage.vue';
 
 </script>
 
 <template>
-    <PreviewPage/>
+    <RouterView>
+
+    </RouterView>
 </template>
 
 <style scoped>
