@@ -24,7 +24,7 @@
               <span :style="{ color: answer.answer.isCorrect ? 'green' : 'red' }">
                 <span v-if="Array.isArray(answer.answer.answersText)">
                   <span v-for="(ans, idx) in answer.answer.answersText" :key="idx" :style="{ color: ans.isCorrect ? 'green' : 'red' }">
-                    {{ ans.text }}
+                    {{ ans.text + " " }}
                   </span>
                 </span>
                 <span v-if="answer.answer.rawAnswer">
