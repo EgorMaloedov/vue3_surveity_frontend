@@ -84,7 +84,7 @@ const toggleMenu = () => {
 // Open the change tests modal
 const updateTest = async () => {
   await testsStore.setCurrentTest(props.test);
-  modalStore.openModal(markRaw(UpdateTestModal), 'default', `Редактировать ${props.test.type === 'test' ? ' тест' : ' опрос'}`)
+  modalStore.openModal(markRaw(UpdateTestModal), 'default', `Редактировать ${props.test.type === 'test' ? ' тест' : ' опрос'}`, ' ',true)
 };
 
 // Open the remove tests modal

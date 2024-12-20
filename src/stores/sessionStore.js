@@ -20,6 +20,7 @@ export const useSessionStore = defineStore('sessionStore', () => {
             const response = await apiClient.post('/tests/token/start', { token, session_id: sessionId.data.session_id });
 
             sessionId.value = sessionId.data.session_id;
+
             localStorage.setItem('sessionId', sessionId.value);
             currentQuestion.value = response.data.session_id;
         } catch (err) {

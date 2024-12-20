@@ -13,6 +13,9 @@
           <p>Спасибо за прохождение теста!</p>
         </div>
         <ul v-else class="test-details">
+          <li v-if="test.options.description"> {{test.description}} </li>
+          <li v-if="test.options.complete_time"> Время на прохождение (ч:м:с) {{test.complete_time}} </li>
+          <li v-if="sessionStore.session && test.options.complete_time"> Ваш таймер: {{ formattedTimer }} </li>
           <li><strong>Количество вопросов:</strong> {{ test.question_count }}</li>
         </ul>
 
@@ -27,14 +30,13 @@
       </section>
     </div>
 
-
     <div v-else class="no-data">No test data available.</div>
   </div>
 </template>
 
 <script setup>
 import {useRoute} from "vue-router";
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {useTestsStore} from "../../../stores/testsStore.js";
 import {useSessionStore} from "../../../stores/sessionStore.js";
 
@@ -64,8 +66,40 @@ const startTest = async () => {
   }
 };
 
+// Таймер
+const timerInterval = ref(null);
+const formattedTimer = ref('00:00:00');
+
+const updateTimer = () => {
+  if (sessionStore.session && sessionStore.session.pass_time) {
+    const [hours, minutes, seconds] = sessionStore.session.pass_time.split(':').map(Number);
+    let totalSeconds = hours * 3600 + minutes * 60 + seconds + 1;
+    const newHours = Math.floor(totalSeconds / 3600);
+    const newMinutes = Math.floor((totalSeconds % 3600) / 60);
+    const newSeconds = totalSeconds % 60;
+    formattedTimer.value = `${String(newHours).padStart(2, '0')}:${String(newMinutes).padStart(2, '0')}:${String(newSeconds).padStart(2, '0')}`;
+    sessionStore.session.pass_time = formattedTimer.value;
+  }
+};
+
 onMounted(async () => {
   // Fetch session status or any other necessary data
+  if (sessionStore.session && test.value.options.complete_time) {
+    updateTimer();
+    timerInterval.value = setInterval(updateTimer, 1000);
+  }
+});
+
+watch(() => sessionStore.session, (newSession, oldSession) => {
+  if (newSession && test.value.options.complete_time) {
+    updateTimer();
+    if (!timerInterval.value) {
+      timerInterval.value = setInterval(updateTimer, 1000);
+    }
+  } else {
+    clearInterval(timerInterval.value);
+    timerInterval.value = null;
+  }
 });
 </script>
 

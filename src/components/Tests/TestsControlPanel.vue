@@ -18,7 +18,7 @@ const modalStore = useModalStore();
 const emits = defineEmits(["update:modalValue"]);
 
 const openModal = () => {
-  modalStore.openModal(markRaw(CreateTestsModal), 'default', 'Создать опрос');
+  modalStore.openModal(markRaw(CreateTestsModal), 'default', 'Создать опрос', '', true);
 };
 </script>
 

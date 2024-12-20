@@ -23,6 +23,7 @@ const handleRemoveTest = async () => {
   if (tests.value) {
     await testsStore.removeTest(tests.value.id);
   }
+  modalStore.closeModal()
 };
 
 

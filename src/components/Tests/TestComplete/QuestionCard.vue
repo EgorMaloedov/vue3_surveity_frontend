@@ -1,7 +1,7 @@
 <template>
   <div class="question-card">
-    <Loader v-if="sessionStore.loading" />
-    <ErrorMessage v-else-if="sessionStore.error" :message="sessionStore.error" />
+    <ErrorMessage v-if="sessionStore.error" :message="sessionStore.error" />
+    {{sessionStore.session ? sessionStore.session.pass_time : ''}}
     <QuestionContent
         v-if="sessionStore.currentQuestion"
         :question="sessionStore.currentQuestion"
@@ -17,7 +17,6 @@
 import { ref, watch, computed } from "vue";
 import { useSessionStore} from "../../../stores/sessionStore.js";
 import { useRoute } from "vue-router";
-import Loader from "./elements/Loader.vue";
 import ErrorMessage from "./elements/ErrorMessage.vue";
 import QuestionContent from "./elements/QuestionContent.vue";
 

@@ -14,7 +14,7 @@ export const emptyTestQuestion = {
 // Опции выбора типа
 export const selectOptions = [
     { value: "test", label: "Тест" },
-    { value: "survey", label: "Опрос" },
+    // { value: "survey", label: "Опрос" },
 ];
 
 // Опции для чекбоксов в тестах

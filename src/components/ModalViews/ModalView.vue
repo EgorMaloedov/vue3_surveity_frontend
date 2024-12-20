@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div v-if="isOpen" class="modal-overlay" @click.self="closeModal">
+    <div v-if="isOpen" class="modal-overlay" @click.self="!modalStore.disableCloseOnOverlay ? closeModal : () => {}">
       <div :class="['modal-content', modalType]" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <button class="modal-close" @click="closeModal" aria-label="Close">×</button>
 

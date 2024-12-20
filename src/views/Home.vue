@@ -1,10 +1,8 @@
 <template>
   <PageLayout>
     <TestsControlPanel/>
-    <TestStoreLoader>
-      <EmptyTestsList v-if="testsSize === 0" />
-      <TestsList v-else/>
-    </TestStoreLoader>
+    <EmptyTestsList v-if="testsSize === 0 && !testsStore.isLoading" />
+    <TestsList v-else/>
   </PageLayout>
 </template>
 

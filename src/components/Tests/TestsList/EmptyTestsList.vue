@@ -11,7 +11,7 @@ import {useModalStore} from "../../../stores/modalViewStore.js";
 const modalStore = useModalStore()
 
 const openModal = () => {
-  modalStore.openModal(markRaw(CreateTestsModal), 'default', 'Создать опрос');
+  modalStore.openModal(markRaw(CreateTestsModal), 'default', 'Создать опрос', '', true);
 };
 </script>
 
