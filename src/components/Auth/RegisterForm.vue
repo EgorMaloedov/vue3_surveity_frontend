@@ -24,7 +24,7 @@
 
 <script setup>
 import {computed, ref} from 'vue';
-import { useAuthStore} from "../../stores/authStore.js";
+import {useAuthStore} from "../../stores/authStore.js";
 import router from "../../router.js";
 import InputField from "./elements/InputField.vue";
 import ErrorMessage from "./elements/ErrorMessage.vue";
@@ -35,8 +35,8 @@ const authStore = useAuthStore();
 const email = ref('');
 const password = ref('');
 const errors = ref({});
-const serverError = computed(()=> authStore.authError);
-const loading = computed(()=> authStore.isLoading);
+const serverError = computed(() => authStore.authError);
+const loading = computed(() => authStore.isLoading);
 
 const validate = () => {
   errors.value = {};
@@ -49,8 +49,12 @@ const validate = () => {
 
   if (!password.value) {
     errors.value.password = 'Введите пароль.';
-  } else if (password.value.length < 6) {
-    errors.value.password = 'Пароль должен быть не менее 6 символов.';
+  } else if (password.value.length < 8) {
+    errors.value.password = 'Пароль должен быть не менее 8 символов.';
+  } else if (!/[A-Z]/.test(password.value)) {
+    errors.value.password = 'Пароль должен содержать хотя бы одну заглавную букву.';
+  } else if (!/[a-z]/.test(password.value)) {
+    errors.value.password = 'Пароль должен содержать хотя бы одну строчную букву.';
   }
 
   return Object.keys(errors.value).length === 0;
@@ -79,5 +83,11 @@ const handleSubmit = async () => {
 
 .server-error {
   margin-top: 10px;
+}
+
+.password-requirements {
+  color: #6c757d; /* Слабый тёмно-серый цвет */
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
 }
 </style>
