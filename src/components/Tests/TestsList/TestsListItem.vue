@@ -30,7 +30,6 @@
         <div class="menu-content">
           <div class="left">
             <span @click="shareTest">
-              <img src="../../../assets/media/testsListItem/linnk.svg" alt="Survey Icon" />
               <span>Поделиться опросом</span>
             </span>
             <span @click="updateTest">

@@ -1,11 +1,11 @@
 <template>
   <div>
-    <h2>Сессии и ответы</h2>
-    <div v-for="session in transformedSessions" :key="session.id" class="session">
+    <div v-for="session in filteredSessions" :key="session.id" class="session">
       <div class="session-header">
         <div class="user-info">
           <h3>
-            <span v-if="test.user_inputs" v-for="(user_input, index) in test.user_inputs" :key="index">
+            <span style="display: flex; flex-direction: column; align-items: flex-start;"
+                  v-if="test.user_inputs" v-for="(user_input, index) in test.user_inputs" :key="index">
               {{ user_input.title }}: {{ JSON.parse(session.user_inputs)[index] }}{{ index < test.user_inputs.length - 1 ? ',' : '' }}
             </span>
           </h3>
@@ -23,7 +23,7 @@
         </summary>
         <div class="answers">
           <h4>Ответы:</h4>
-          <ul>
+          <ul style="list-style-type: none; display: flex; flex-direction: column; align-items: flex-start;" >
             <li v-for="(answer, index) in session.answers" :key="index">
               <strong>{{ answer.question }}</strong>:
               <span :style="{ color: answer.answer.isCorrect ? 'green' : 'red' }">
@@ -96,10 +96,11 @@ const transformSessions = (sessions, questions) => {
       answers: transformedAnswers,
       correctAnswersCount,
     };
-  });
+  }).filter(session => session.answers.length > 0);
 };
 
 const transformedSessions = computed(() => transformSessions(props.test.sessions, props.test.questions));
+const filteredSessions = computed(() => transformedSessions.value.filter(session => session.answers.length > 0));
 </script>
 
 <style scoped>
