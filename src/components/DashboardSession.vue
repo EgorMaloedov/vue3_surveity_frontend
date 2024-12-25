@@ -3,48 +3,52 @@
     <h2>Сессии и ответы</h2>
     <div v-for="session in transformedSessions" :key="session.id" class="session">
       <div class="session-header">
-        <h3>Статус: {{ session.status }}</h3>
-        <p>Дата: {{ new Date(session.created_at).toLocaleString() }}</p>
-        <p>Время выполнения: {{ session.time_spent }}</p>
-      </div>
-      <div class="session-body">
-        <div class="user-inputs">
-          <h4>Ввод пользователя:</h4>
-          <ul>
-            <li v-if="test.user_inputs" v-for="(user_input, index) in test.user_inputs" :key="index">
-              {{ user_input.title }}: {{ JSON.parse(session.user_inputs)[index] }}
-            </li>
-          </ul>
+        <div class="user-info">
+          <h3>
+            <span v-if="test.user_inputs" v-for="(user_input, index) in test.user_inputs" :key="index">
+              {{ user_input.title }}: {{ JSON.parse(session.user_inputs)[index] }}{{ index < test.user_inputs.length - 1 ? ',' : '' }}
+            </span>
+          </h3>
         </div>
+        <div class="session-meta">
+          <p class="time-spent">Время выполнения: {{ session.time_spent }}</p>
+          <p class="date">Дата: {{ new Date(session.created_at).toLocaleString() }}</p>
+        </div>
+      </div>
+      <details class="answers-details">
+        <summary class="correct-answers">
+          Количество правильных ответов:
+          <strong>{{ session.correctAnswersCount }}</strong> из
+          <strong>{{ session.answers.length }}</strong>
+        </summary>
         <div class="answers">
           <h4>Ответы:</h4>
           <ul>
             <li v-for="(answer, index) in session.answers" :key="index">
               <strong>{{ answer.question }}</strong>:
               <span :style="{ color: answer.answer.isCorrect ? 'green' : 'red' }">
-                <span v-if="Array.isArray(answer.answer.answersText)">
+                <template v-if="Array.isArray(answer.answer.answersText)">
                   <span v-for="(ans, idx) in answer.answer.answersText" :key="idx" :style="{ color: ans.isCorrect ? 'green' : 'red' }">
                     {{ ans.text + " " }}
                   </span>
-                </span>
-                <span v-if="answer.answer.rawAnswer">
+                </template>
+                <template v-else-if="answer.answer.rawAnswer">
                   {{ answer.answer.rawAnswer }}
-                </span>
-                <span v-if="answer.answer.answerText">
+                </template>
+                <template v-else-if="answer.answer.answerText">
                   {{ answer.answer.answerText }}
-                </span>
+                </template>
               </span>
             </li>
           </ul>
         </div>
-      </div>
+      </details>
     </div>
   </div>
 </template>
 
 <script setup>
 import { computed } from "vue";
-import { useTestsStore } from "../stores/testsStore.js";
 
 const props = defineProps({
   test: Object,
@@ -81,28 +85,25 @@ const transformSessions = (sessions, questions) => {
         })
         .filter(Boolean);
 
+    const correctAnswersCount = transformedAnswers.filter((answer) =>
+        Array.isArray(answer.answer.answersText)
+            ? answer.answer.answersText.every((ans) => ans.isCorrect)
+            : answer.answer.isCorrect
+    ).length;
+
     return {
       ...session,
       answers: transformedAnswers,
+      correctAnswersCount,
     };
   });
 };
 
-const currentTest = computed(() => {
-  return {
-    sessions: props.test.sessions,
-    questions: props.test.questions,
-  };
-});
-
-const transformedSessions = computed(() => {
-  return transformSessions(currentTest.value.sessions, currentTest.value.questions);
-});
+const transformedSessions = computed(() => transformSessions(props.test.sessions, props.test.questions));
 </script>
 
 <style scoped>
 .session {
-  overflow: hidden;
   margin-bottom: 16px;
   padding: 16px;
   background-color: #21212B;
@@ -117,35 +118,50 @@ const transformedSessions = computed(() => {
   margin-bottom: 8px;
 }
 
-.session-header h3 {
+.user-info h3 {
   margin: 0;
 }
 
-.session-body {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.session-meta {
+  text-align: right;
 }
 
-.user-inputs,
+.time-spent,
+.date {
+  margin: 0;
+}
+
+.correct-answers {
+  margin-top: 16px;
+  cursor: pointer;
+  padding: 8px;
+  background-color: #272732;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: inline-block;
+  font-weight: bold;
+  text-align: center;
+}
+
+.correct-answers:hover {
+  background-color: #343446;
+}
+
 .answers {
+  margin-top: 8px;
   background-color: #272732;
   padding: 16px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-h4 {
-  margin: 0 0 8px;
-}
-
-ul {
+.answers ul {
   list-style: none;
-  margin: 0;
   padding: 0;
+  margin: 0;
 }
 
-li {
-  margin-bottom: 4px;
+.answers li {
+  margin-bottom: 8px;
 }
 </style>

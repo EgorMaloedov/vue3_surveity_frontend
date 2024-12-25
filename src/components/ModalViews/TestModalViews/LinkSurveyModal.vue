@@ -5,7 +5,7 @@
     <div class="createSurveySteps">
       <!-- Ссылки на Telegram и Web -->
       <div class="testsLinkSection">
-        <span class="sectionTitle" :class="telegramLinkColorClass">Telegram: {{currentTest.tgLink ? ` действителен до ${tgExpiredAt}` : ''}}</span>
+        <span class="sectionTitle">Telegram: </span>
         <div class="linkContainer">
           <input
               type="text"
@@ -18,13 +18,8 @@
             <img src="../../../assets/media/copy.svg" alt="Copy" class="copyIcon" />
           </button>
         </div>
-        <div class="expirationContainer">
-          <label for="telegramExpiration">Срок жизни ссылки (в часах):</label>
-          <input type="number" v-model="telegramExpiration" id="telegramExpiration" class="expirationInput" />
-        </div>
         <div class="linkBtns">
           <button @click="generateTelegramLink" class="generateButton">Сгенерировать ссылку</button>
-          <button @click="closeTelegramLink" class="closeButton">Закрыть ссылку</button>
         </div>
       </div>
 
@@ -113,18 +108,6 @@ const copyToClipboard = (link) => {
     });
   }
 };
-
-// Computed properties for determining the color class
-const telegramLinkColorClass = computed(() => {
-  if (!tgExpiredAt.value) return '';
-  const now = new Date();
-  const expirationDate = new Date(tgExpiredAt.value);
-  const timeDiff = (expirationDate.getTime() - now.getTime()) / (1000 * 60 * 60); // in hours
-  console.log(expirationDate)
-  if (timeDiff < 0) return 'expired';
-  if (timeDiff < 2) return 'warning';
-  return '';
-});
 
 const webLinkColorClass = computed(() => {
   if (!webExpiredAt.value) return '';

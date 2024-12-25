@@ -19,7 +19,7 @@ export const selectOptions = [
 
 // Опции для чекбоксов в тестах
 export const testCheckboxOptions = [
-    { value: "password", label: "Приватный тест" },
+    // { value: "password", label: "Приватный тест" },
     { value: "description", label: "Подробное описание теста" },
     { value: "complete_time", label: "Ограничение времени прохождения" },
 ];

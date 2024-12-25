@@ -178,9 +178,9 @@ export const apiCloseTestLink = async (testId, linkType, token) => {
  */
 export const apiGetTestSummaryByToken = async (token) => {
     try {
-        const response = await apiClient.get('/tests/token/summary', {
-            params: {
-                token: token,
+        const response = await apiClient.get('/tests/current/summary', {
+            params:{
+                token: token
             }
         });
         return response.data;

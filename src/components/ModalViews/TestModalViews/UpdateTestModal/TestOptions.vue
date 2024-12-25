@@ -7,18 +7,18 @@
       />
     </ListItem>
 
-    <ListItem
-        v-if="test.options['password']"
-        :title="'Укажите пароль ' + (test.type === 'test' ? 'теста' : 'опроса')"
-    >
-      <TextInput
-          autocomplete="test-password"
-          type="password"
-          v-model="test.password"
-          id="test-password"
-          :placeholder="'Пароль'"
-      />
-    </ListItem>
+<!--    <ListItem-->
+<!--        v-if="test.options['password']"-->
+<!--        :title="'Укажите пароль ' + (test.type === 'test' ? 'теста' : 'опроса')"-->
+<!--    >-->
+<!--      <TextInput-->
+<!--          autocomplete="test-password"-->
+<!--          type="password"-->
+<!--          v-model="test.password"-->
+<!--          id="test-password"-->
+<!--          :placeholder="'Пароль'"-->
+<!--      />-->
+<!--    </ListItem>-->
 
     <ListItem
         v-if="test.options['description']"

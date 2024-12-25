@@ -25,9 +25,38 @@ const test = ref(testsStore.currentTest);
 const modalStore = useModalStore();
 
 const handleUpdateTest = async () => {
+  if (!validateTestFields()) {
+    return; // Если валидация не прошла, прерываем выполнение
+  }
   await testsStore.updateTestWithQuestions(test.value);
   modalStore.closeModal();
 };
+
+const validateTestFields = () => {
+  const errors = [];
+  if (!test.value.title || test.value.title.trim() === "") {
+    errors.push("Заголовок теста обязателен.");
+  }
+  if (!test.value.start_date) {
+    errors.push("Дата начала теста обязательна.");
+  }
+  if (!test.value.end_date) {
+    errors.push("Дата окончания теста обязательна.");
+  }
+  if (test.value.end_date <= test.value.start_date) {
+    errors.push("Дата окончания должна быть позже даты начала.");
+  }
+  if (!test.value.questions || test.value.questions.length === 0) {
+    errors.push("Тест должен содержать хотя бы один вопрос.");
+  }
+
+  if (errors.length > 0) {
+    alert(errors.join("\n"));
+    return false;
+  }
+  return true;
+};
+
 
 watch(
     () => test.value.start_date,

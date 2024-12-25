@@ -13,7 +13,7 @@
       />
     </ListItem>
 
-    <ListItem title="Выберите даты:">
+    <ListItem title="Выберите даты проведения теста:">
       <div class="date-picker-row">
         <DatePickerInput
             v-model="test.start_date"

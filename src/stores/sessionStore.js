@@ -1,4 +1,3 @@
-// stores/sessionStore.js
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import apiClient from "../api/client.js";
@@ -17,12 +16,12 @@ export const useSessionStore = defineStore('sessionStore', () => {
         error.value = null;
         try {
             const sessionId = await apiClient.post('/sessions', { userInputs }, { headers: { 'Authorization': `Bearer ${token}` } });
-            const response = await apiClient.post('/tests/token/start', { token, session_id: sessionId.data.session_id });
+            const response = await apiClient.post(`/sessions/${sessionId.data.session_id[0]}/start`, {}, {headers: { 'Authorization': `Bearer ${token}`}});
 
-            sessionId.value = sessionId.data.session_id;
+            sessionId.value = sessionId.data.session_id[0];
 
             localStorage.setItem('sessionId', sessionId.value);
-            currentQuestion.value = response.data.session_id;
+            currentQuestion.value = response.data;
         } catch (err) {
             error.value = err.response?.data?.message || 'An error occurred';
         } finally {
@@ -34,7 +33,9 @@ export const useSessionStore = defineStore('sessionStore', () => {
         loading.value = true;
         error.value = null;
         try {
-            const response = await apiClient.post('/tests/token/continue', { token, session_id: sessionId.value });
+            const response = await apiClient.post(`/sessions/${sessionId.value}/continue`, {}, {
+                headers: { 'Authorization': `Bearer ${token}`}
+            });
             currentQuestion.value = response.data.session;
         } catch (err) {
             error.value = err.response?.data?.message || 'An error occurred';
@@ -48,10 +49,8 @@ export const useSessionStore = defineStore('sessionStore', () => {
         loading.value = true;
         error.value = null;
         try {
-            const response = await apiClient.get(`/sessions/${sessionId.value}/next_question`, {
-                params: {
-                    token: token,
-                }
+            const response = await apiClient.get(`/sessions/${sessionId.value}/next`, {
+                headers: { 'Authorization': `Bearer ${token}`}
             });
             if (response.data) {
                 currentQuestion.value = response.data;
@@ -73,7 +72,11 @@ export const useSessionStore = defineStore('sessionStore', () => {
             await apiClient.post(`/sessions/${sessionId.value}/submit_answer`, {
                 question_id: questionId,
                 answer_id: answerId,
-            });
+            },
+                {
+                    headers: { 'Authorization': `Bearer ${token}`}
+                }
+            );
             if (!currentQuestion.value.isLast){
                 await getNextQuestion(token);
             }
